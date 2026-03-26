@@ -1,0 +1,4 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","2531","@Web PLaywright special locators","","2026-02-24","passed","2026-02-24","","UIBasicsTest.spec.js","",""
+"","4155","@Web More validations test","","2026-02-24","passed","2026-02-24","","UIBasicsTest.spec.js","",""
+"","1906","@Web Calendar test","","2026-02-24","passed","2026-02-24","","UIBasicsTest.spec.js","",""

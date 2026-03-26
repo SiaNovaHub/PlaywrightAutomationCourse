@@ -1,0 +1,30 @@
+{
+	"servers": {
+		"playwright": {
+			"command": "npx",
+			"args": [ 
+				"@playwright/mcp@latest",
+		 
+			],
+			"cwd": "${input:cwd}",
+			"sandboxEnabled": false,
+			"dev": {
+				"enabled": false
+			},
+			"env": {},
+			"type": "stdio"
+		}
+	},
+	"inputs": [
+		{
+			"id": "args",
+			"type": "promptString",
+			"description": "Server Arguments"
+		},
+		{
+			"id": "cwd",
+			"type": "promptString",
+			"description": "Working Directory"
+		}
+	]
+}

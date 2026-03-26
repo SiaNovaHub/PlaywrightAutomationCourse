@@ -1,0 +1,2 @@
+Found text: Join 13,522 Happy Subscibers!
+Number extracted:13,522
