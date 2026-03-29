@@ -21,6 +21,7 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@playwright/cli": "^0.1.1",
     "exceljs": "^4.4.0"
   }
 }
