@@ -1,12 +1,10 @@
 const { expect } = require('@playwright/test');
-//const playwright = require('@playwright/test');
-const { Given, When, Then } = require('@cucumber/cucumber')
-//const { POManager } = require('../../pageobjects/POManager');
+const { Given, When, Then } = require('@cucumber/cucumber');
 
-Given('I login to Ecomm app with {string} and {string}', {timeout : 100*1000}, async function (email, password) {
-    const loginPage = this.poManager.getLoginPage();
-    await loginPage.openWebsite();
-    await loginPage.standardLogin(email, password);
+Given('I login to Ecomm app with {string} and {string}', { timeout: 100 * 1000 }, async function (email, password) {
+    this.loginPage = this.poManager.getLoginPage();
+    await this.loginPage.openWebsite();
+    await this.loginPage.standardLogin(email, password);
 });
 
 Then('I see login error message', async function () {
@@ -25,28 +23,44 @@ Then('I verify {string} is displayed in the cart', async function (productName) 
     await this.checkoutPage.validateProductInCart(productName);
 });
 
-When('I proceed to checkout and enter the country as {string}', async function (countryName) {
+When('I buy {string} from the cart', async function (productName) {
+    this.checkoutPage = this.poManager.getCheckoutPage();
+    await this.checkoutPage.buyProductNow(productName);
+});
+
+Then('I verify user email is displayed as {string}', async function (email) {
+    this.checkoutPage = this.poManager.getCheckoutPage();
+    await this.checkoutPage.validateUserEmail(email);
+});
+
+When('I proceed to checkout', async function () {
+    this.checkoutPage = this.poManager.getCheckoutPage();
     await this.checkoutPage.navigateToCheckout();
+});
+
+When('I select the country as {string}', async function (countryName) {
+    this.checkoutPage = this.poManager.getCheckoutPage();
     await this.checkoutPage.selectCountry(countryName);
 });
 
 When('I place an order', async function () {
+    this.checkoutPage = this.poManager.getCheckoutPage();
     await this.checkoutPage.placeOrder();
 });
 
 Then('I validate the confirmation message and retrieve orderID', async function () {
     this.orderConfirmationPage = this.poManager.getOrderConfirmationPage();
     await this.orderConfirmationPage.validateConfirmationMessage();
-    const orderId = await this.orderConfirmationPage.getOrderId();
-    this.orderId = orderId; // Store orderId in context for use in subsequent steps
+    this.orderId = await this.orderConfirmationPage.getOrderId();
 });
 
 When('I navigate to orders page', async function () {
+    this.dashboardPage = this.poManager.getDashboardPage();
     await this.dashboardPage.navigateToOrders();
 });
 
 Then('I validate orderID in order details page', async function () {
     this.ordersHistoryPage = this.poManager.getOrdersHistoryPage();
     await this.ordersHistoryPage.openViewOrderDetails(this.orderId);
-    expect(this.orderId === await this.ordersHistoryPage.getOrderIdInDetails()).toBeTruthy();
+    expect(await this.ordersHistoryPage.getOrderIdInDetails()).toBe(this.orderId);
 });

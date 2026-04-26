@@ -1,24 +1,23 @@
-const playwright = require('@playwright/test');
+const { chromium } = require('@playwright/test');
+const { Before, After, AfterStep, Status } = require('@cucumber/cucumber');
 const { POManager } = require('../../pageobjects/POManager');
-const { Before, After, BeforeStep, AfterStep, Status } = require('@cucumber/cucumber')
 
 Before(async function () {
-    const browser = await playwright.chromium.launch({ headless: false });
-    const context = await browser.newContext();
-    this.page = await context.newPage();
+    this.browser = await chromium.launch({ headless: false });
+    this.context = await this.browser.newContext();
+    this.page = await this.context.newPage();
     this.poManager = new POManager(this.page);
 });
 
-BeforeStep(async function () {
-    //await this.page.screenshot({ path: `screenshot-BeforeStep${Date.now()}.png` });
-});
-
-AfterStep(async function ({ result }) {
-    if(result.status === Status.FAILED) {
-        await this.page.screenshot({ path: `screenshot-AfterStep-${Date.now()}.png` });
+AfterStep(async function ({ pickle, result }) {
+    if (result.status === Status.FAILED) {
+        const scenarioName = pickle.name.replace(/[^a-z0-9]+/gi, '-').toLowerCase();
+        await this.page.screenshot({ path: `screenshot-${scenarioName}-${Date.now()}.png` });
     }
 });
 
 After(async function () {
     await this.page.close();
+    await this.context.close();
+    await this.browser.close();
 });

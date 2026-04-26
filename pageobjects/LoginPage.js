@@ -1,4 +1,4 @@
-const { expect } = require("allure-playwright");
+const { expect } = require("@playwright/test");
 
 class LoginPage {
 
@@ -7,6 +7,7 @@ class LoginPage {
         this.logInBtn = page.getByRole('button', { name: 'Login' });
         this.userEmailField = page.getByPlaceholder("email@example.com");
         this.userPasswordField = page.getByPlaceholder("enter your passsword");
+        this.loginErrorMessage = page.getByText("Incorrect email or password.");
     }
 
     async openWebsite() {
@@ -20,8 +21,7 @@ class LoginPage {
     }
 
     async validateLoginErrorMessage() {
-        await expect(this.page.getByText("Incorrect email or password.")).toBeVisible();
+        await expect(this.loginErrorMessage).toBeVisible();
     }
-
 }
 module.exports = { LoginPage };
